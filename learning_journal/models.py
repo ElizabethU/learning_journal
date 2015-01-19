@@ -1,15 +1,15 @@
 import datetime
-
-
 from sqlalchemy import (
     Column,
+    DateTime,
     Index,
     Integer,
     Text,
-    DateTime,
-    Unicode
+    Unicode,
+    UnicodeText,
     )
 
+import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import (
@@ -31,18 +31,25 @@ class MyModel(Base):
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
 
+
 class Entry(Base):
     __tablename__ = 'entries'
     id = Column(Integer, primary_key=True)
-    title = Column(Text, unique=True, nullable=False) #how to add 255 max?
-    body = Column(Text, default=u'')
+    title = Column(Unicode(255), unique=True, nullable=False)
+    body = Column(UnicodeText, default=u'')
     created = Column(DateTime, default=datetime.datetime.utcnow)
     edited = Column(DateTime, default=datetime.datetime.utcnow)
 
     @classmethod
-    def by_id(cls, id):
-        return DBSession.query(Entry).filter(Entry.id == id).first()
+    def all(cls):
+        """return a query with all entries, ordered by creation date reversed
+        """
+        return DBSession.query(cls).order_by(sa.desc(cls.created)).all()
 
     @classmethod
-    def all(cls):
-        return DBSession.query(Entry).order_by(sa.desc(Entry.created))
+    def by_id(cls, id):
+        """return a single entry identified by id
+
+        If no entry exists with the provided id, return None
+        """
+        return DBSession.query(cls).get(id)
