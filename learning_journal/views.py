@@ -33,7 +33,8 @@ def view(request):
         return HTTPNotFound()
     return {'entry': entry}
 
-@view_config(route_name='action', match_param='action=create', renderer='templates/edit.jinja2')
+@view_config(route_name='action', match_param='action=create',
+             renderer='templates/edit.jinja2')
 def create(request):
     entry = Entry()
     form = EntryCreateForm(request.POST)

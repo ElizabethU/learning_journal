@@ -1,6 +1,7 @@
 {% extends "templates/layout.jinja2" %}
 {% block body %}
-<form action="." method="POST">
+<h2>Create a Journal Entry</h2>
+<form action="" method="POST">
 {% for field in form %}
   {% if field.errors %}
     <ul>
