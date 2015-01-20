@@ -3,7 +3,7 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 
 from sqlalchemy.exc import DBAPIError
-from .forms import EntryCreateForm #.forms syntax is weird but correct
+from .forms import EntryCreateForm, EntryUpdateForm #.forms syntax is weird but correct
 
 from .models import (
     DBSession,
@@ -46,7 +46,15 @@ def create(request):
 
 @view_config(route_name='action', match_param='action=edit', renderer='string')
 def update(request):
-    return 'edit page'
+    this_id = request.matchdict.get('id', -1)
+    entry = Entry.by_id(this_id)
+    if not entry:
+        return HTTPNotFound()
+    form = EntryUpdateForm(request.POST, entry)
+    if request.method == 'POST' and form.validate():
+        form.populate_obj(entry)
+        return HTTPFound(location=request.route_url('blog', id=entry.id, slug=entry.slug))
+    return {'form': form, 'action': request.matchdict.get('action')}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
     <meta charset="utf-8">
     <title>Python Learning Journal</title>
     <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -9,7 +10,12 @@
   </head>
   <body>
     <header>
-      <nav><ul><li><a href="{{ request.route_url('home') }}">Home</a></li></ul></nav>
+      <nav>
+        <ul class='navbar'>
+          <li><h4><a href="{{ request.route_url('home') }}">Home</a></h4></li>
+          <li><h4><a href="{{ request.route_url('action', action='create') }}">New Entry</a></h4></li>
+        </ul>
+      </nav>
     </header>
     <main>
       <h1>My Python Journal</h1>

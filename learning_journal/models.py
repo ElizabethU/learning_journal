@@ -53,3 +53,26 @@ class Entry(Base):
         If no entry exists with the provided id, return None
         """
         return DBSession.query(cls).get(id)
+
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    username = Column(Unicode(255), unique=True, nullable=False)
+    email = Column(Unicode(255), unique=True, nullable=False)
+    password = Column(Unicode(255), nullable=False)
+    created = Column(DateTime, default=datetime.datetime.utcnow)
+    edited = Column(DateTime, default=datetime.datetime.utcnow)
+
+    @classmethod
+    def all(cls):
+        """return a query with all entries, ordered by creation date reversed
+        """
+        return DBSession.query(cls).order_by(sa.desc(cls.created)).all()
+
+    @classmethod
+    def by_id(cls, id):
+        """return a single entry identified by id
+
+        If no entry exists with the provided id, return None
+        """
+        return DBSession.query(cls).get(id)
